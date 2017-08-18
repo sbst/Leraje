@@ -27,12 +27,12 @@ namespace Leraje
 
       virtual ~Component();
 
+      std::shared_ptr<Database::Database> db;
+
     private:
       virtual void onLoad();
 
       virtual void onUnload();
-
-      std::shared_ptr<Database::Database> db;
     };
   }
 }
