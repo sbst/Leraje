@@ -11,5 +11,6 @@
 #include <string.h>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 typedef int64_t timestamp_t;
