@@ -2,7 +2,6 @@
 #include "Database.h"
 
 #include <boost/property_tree/json_parser.hpp>
-#include <boost/foreach.hpp>
 
 using namespace Leraje::Database;
 
@@ -10,7 +9,7 @@ using namespace std;
 
 // TODO: /tmp/data/data.zip UNZIP REQUIRED
 //const char* Database::FileDataPath = "/tmp/data/";
-const char* Database::FileDataPath = "/home/sbst/highloadcup/Leraje/data/TRAIN/data/";
+const char* Database::FileDataPath = "/home/sbst/workspace/Leraje/data/TRAIN/data/";
 
 std::shared_ptr<Database> Database::GetDatabase()
 {
@@ -57,5 +56,13 @@ bool Database::ReadFromTable(string tableName, uint32_t id, string& json)
 
 void Database::LoadFromFile(string fileName, string tableName)
 {
-  table->LoadFromFile(fileName, tableName);
+    boost::property_tree::ptree tree;
+    boost::property_tree::read_json(fileName, tree);
+    stringstream outData;
+    for(auto const& node : tree.get_child(tableName))
+    {
+      boost::property_tree::write_json(outData, node.second);
+      table->WriteToTable(outData.str());
+      outData.str("");
+    }
 }

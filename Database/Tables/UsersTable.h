@@ -34,8 +34,6 @@ namespace Leraje
 
         bool ReadFromTable(uint32_t id, std::string& json);
 
-        bool LoadFromFile(std::string fileName, std::string tableName);
-
       private:
         uint32_t lastId;
 

@@ -50,19 +50,6 @@ bool UsersTable::ReadFromTable(uint32_t id, string& json)
   return result;
 }
 
-bool UsersTable::LoadFromFile(string fileName, string tableName)
-{
-  // TODO:
-  /*boost::property_tree::ptree tree;
-  boost::property_tree::read_json(fileName, tree);
-  BOOST_FOREACH(boost::property_tree::ptree::value_type& node, tree.get_child(tableName))
-  {
-    boost::property_tree::ptree tree1(node);
-    IncomeData(&tree, row);
-  }*/
-  return true;
-}
-
 bool UsersTable::FromJson(string json, UsersData& row)
 {
   bool result = false;

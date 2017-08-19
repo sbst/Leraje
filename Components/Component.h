@@ -6,6 +6,7 @@
 #include <fastcgi2/component_factory.h>
 #include <fastcgi2/handler.h>
 #include <fastcgi2/request.h>
+#include <fastcgi2/stream.h>
 
 #include <iostream>
 #include <sstream>
