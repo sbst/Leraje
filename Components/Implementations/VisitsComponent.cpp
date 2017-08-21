@@ -9,14 +9,15 @@ VisitsComponent::VisitsComponent(fastcgi::ComponentContext *context)
   : fastcgi::Component(context), Leraje::Components::Component(context)
 {}
 
-void VisitsComponent::handleRequest(fastcgi::Request *request, fastcgi::HandlerContext *context)
+bool VisitsComponent::handleCustomRequest(fastcgi::Request& request)
 {
-  request->setContentType("text/plain");
-  std::stringbuf buffer("Hello " + (request->hasArg("name") ? request->getArg("name") : "stranger") + " I am visits");
-  request->write(&buffer);
+  request.setStatus(404);
+  return true;
 }
 
 void VisitsComponent::loadDatabase()
 {
   cout << "Loading database for visits..." << endl;
+  //db->LoadDatabase("users");
+  cout << "Database loaded for visits..." << endl;
 }

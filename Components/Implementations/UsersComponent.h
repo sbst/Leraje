@@ -11,7 +11,7 @@ namespace Leraje
     public:
       UsersComponent(fastcgi::ComponentContext* context);
 
-      virtual void handleRequest(fastcgi::Request *request, fastcgi::HandlerContext *context) override;
+      virtual bool handleCustomRequest(fastcgi::Request& request) override;
 
       virtual void loadDatabase() override;
     };
