@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/property_tree/json_parser.hpp>
+#include <Database/ITableConnector.h>
 
 #include <memory>
 #include <string.h>
@@ -15,18 +16,9 @@ namespace Leraje
       class Table
       {
       public:
-        Table();
+        Table(ITableConnector* connector);
 
         ~Table();
-
-        typedef struct
-        {
-          std::string email;
-          std::string firstName;
-          std::string lastName;
-          char gender;
-          int64_t birthDate;
-        } UsersData;
 
         bool WriteToTable(std::string json);
 
@@ -35,18 +27,13 @@ namespace Leraje
       private:
         uint32_t lastId;
 
-        //typedef std::vector<UsersData*> UsersRows;
-        typedef std::map<uint32_t, UsersData*> UsersRows;
+        std::map<uint32_t, std::shared_ptr<ITableConnector::TableRow>> table;
 
-        UsersRows* table;
+        ITableConnector* connector;
 
-        bool FromJson(std::string json, UsersData& row);
+        std::shared_ptr<ITableConnector::TableRow> FromJson(std::string json);
 
-        bool ToJson(uint32_t id, UsersData* row, std::string& json);
-
-        void OutcomeData(uint32_t id, UsersData* data, boost::property_tree::ptree& tree); // to be defined in UserComponent
-
-        void IncomeData(boost::property_tree::ptree* tree, UsersData& data); // to be defined in UserComponent
+        bool ToJson(uint32_t id, std::shared_ptr<ITableConnector::TableRow> row, std::string& json);
       };
     }
   }

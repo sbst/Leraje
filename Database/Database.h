@@ -4,7 +4,7 @@
 #include <string.h>
 #include <fstream>
 
-#include "Database/Tables/UsersTable.h"
+#include "Table.h"
 
 namespace Leraje
 {
@@ -23,7 +23,7 @@ namespace Leraje
 
       virtual ~Database();
 
-      void LoadDatabase(std::string field);
+      void LoadDatabase(std::string field, Tables::ITableConnector* connector);
 
       bool WriteToTable(std::string tableName, std::string json);
 
@@ -32,7 +32,7 @@ namespace Leraje
     private:
       Database();
 
-      Tables::UsersTable* table;
+      std::map<std::string, std::unique_ptr<Tables::Table>> tables;
 
       void LoadFromFile(std::string fileName, std::string tableName);
 

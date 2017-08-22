@@ -1,33 +1,33 @@
 #include "pch.h"
-#include "Component.h"
+#include "Components/Entity.h"
 
-using namespace Leraje::Components;
+using namespace Leraje::Entities;
 using namespace std;
 
-Component::Component(fastcgi::ComponentContext *context)
-  : IComponent(context)
+Entity::Entity(fastcgi::ComponentContext *context)
+  : fastcgi::Component(context), IComponent(context)
 {}
 
-Component::~Component()
+Entity::~Entity()
 {}
 
-void Component::onLoad()
+void Entity::onLoad()
 {
   db = Database::Database::GetDatabase();
   loadDatabase();
 }
 
-void Component::onUnload()
+void Entity::onUnload()
 {}
 
-void Component::handleRequest(fastcgi::Request* request, fastcgi::HandlerContext* context)
+void Entity::handleRequest(fastcgi::Request* request, fastcgi::HandlerContext* context)
 {
   request->setContentType("text/plain; charset=utf-8");
   if(request->getRequestMethod() == "GET") getDataFromTable(*request);
   else handleCustomRequest(*request);
 }
 
-void Component::getDataFromTable(fastcgi::Request& request)
+void Entity::getDataFromTable(fastcgi::Request& request)
 {
   string result = "";
   uint32_t val = 0;

@@ -1,16 +1,17 @@
 #pragma once
 
+#include "Database/ITableConnector.h"
 #include "Components/IComponent.h"
 #include "Database/Database.h"
 
 namespace Leraje
 {
-  namespace Components
+  namespace Entities
   {
-    class Component : public IComponent
+    class Entity : public Components::IComponent, public Database::Tables::ITableConnector
     {
     protected:
-      Component(fastcgi::ComponentContext *context);
+      Entity(fastcgi::ComponentContext *context);
 
       virtual void handleRequest(fastcgi::Request *request, fastcgi::HandlerContext *context) override;
 
@@ -18,7 +19,11 @@ namespace Leraje
 
       virtual void loadDatabase() = 0;
 
-      virtual ~Component();
+      virtual void OutcomeData(uint32_t id, TableRow* data, boost::property_tree::ptree& tree) = 0;
+
+      virtual std::shared_ptr<TableRow> IncomeData(boost::property_tree::ptree* tree) = 0;
+
+      virtual ~Entity();
 
       std::shared_ptr<Database::Database> db;
 
