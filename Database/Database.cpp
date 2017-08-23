@@ -63,7 +63,7 @@ void Database::LoadFromFile(string fileName, string tableName)
     for(auto const& node : tree.get_child(tableName))
     {
       boost::property_tree::write_json(outData, node.second);
-      tables[tableName]->WriteToTable(outData.str());
+      tables[tableName]->LoadToTable(outData.str());
       outData.str("");
     }
 }

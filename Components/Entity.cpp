@@ -24,6 +24,7 @@ void Entity::handleRequest(fastcgi::Request* request, fastcgi::HandlerContext* c
 {
   request->setContentType("text/plain; charset=utf-8");
   if(request->getRequestMethod() == "GET") getDataFromTable(*request);
+  else if (request->getRequestMethod() == "POST") setDataToTable(*request);
   else handleCustomRequest(*request);
 }
 
@@ -41,4 +42,34 @@ void Entity::getDataFromTable(fastcgi::Request& request)
   }
   else
     request.setStatus(404);
+}
+// TODO: email should be unique field
+void Entity::setDataToTable(fastcgi::Request& request)
+{
+  bool result = false;
+  char tableName[20];
+  if (request.getURI().find("new") != string::npos)
+  {
+    result = true;
+    sscanf(request.getURI().c_str(), "/%[^/]/new", tableName);
+    vector<string> files;
+    request.argNames(files);
+    for (auto it : files)
+    {
+      if (!db->WriteToTable(tableName, it))
+      {
+        result = false;
+      }
+    }
+  }
+
+  if (result)
+  {
+    stringbuf buffer("{}");
+    request.write(&buffer);
+    request.setStatus(200);
+  }
+  else
+    request.setStatus(400);
+
 }

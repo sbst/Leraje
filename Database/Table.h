@@ -22,6 +22,8 @@ namespace Leraje
 
         bool WriteToTable(std::string json);
 
+        bool LoadToTable(std::string json);
+
         bool ReadFromTable(uint32_t id, std::string& json);
 
       private:
@@ -31,9 +33,11 @@ namespace Leraje
 
         ITableConnector* connector;
 
-        std::shared_ptr<ITableConnector::TableRow> FromJson(std::string json);
+        std::shared_ptr<ITableConnector::TableRow> FromJson(std::string json, int32_t* foundId = nullptr);
 
         bool ToJson(uint32_t id, std::shared_ptr<ITableConnector::TableRow> row, std::string& json);
+
+        bool IsIdExist(int32_t id);
       };
     }
   }

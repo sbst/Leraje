@@ -33,6 +33,8 @@ namespace Leraje
       virtual void onUnload() override;
 
       void getDataFromTable(fastcgi::Request& request);
+
+      void setDataToTable(fastcgi::Request& request);
     };
   }
 }

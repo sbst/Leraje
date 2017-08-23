@@ -18,14 +18,17 @@ Table::~Table()
 
 bool Table::WriteToTable(string json)
 {
-  bool result = true;
+  bool result = false;
   shared_ptr<ITableConnector::TableRow> row;
+  int32_t id;
   try
   {
-    row = FromJson(json);
-    if (row)
+    id = 0;
+    row = FromJson(json, &id);
+
+    if ((row) && (!IsIdExist(id)) && (id > 0))
     {
-      table.insert(table.end(), pair<uint32_t, shared_ptr<ITableConnector::TableRow>>(++lastId, row));
+      table.insert(table.end(), pair<uint32_t, shared_ptr<ITableConnector::TableRow>>(id, row));
       result = true;
     }
   }
@@ -47,7 +50,25 @@ bool Table::ReadFromTable(uint32_t id, string& json)
   return result;
 }
 
-shared_ptr<ITableConnector::TableRow> Table::FromJson(string json)
+bool Table::LoadToTable(string json)
+{
+  bool result = false;
+  shared_ptr<ITableConnector::TableRow> row;
+  try
+  {
+    row = FromJson(json);
+    if (row)
+    {
+      table.insert(table.end(), pair<uint32_t, shared_ptr<ITableConnector::TableRow>>(++lastId, row));
+      result = true;
+    }
+  }
+  catch(const std::bad_alloc& error)
+  {}
+  return result;
+}
+
+shared_ptr<ITableConnector::TableRow> Table::FromJson(string json, int32_t* foundId)
 {
   shared_ptr<ITableConnector::TableRow> result;
   try
@@ -56,6 +77,7 @@ shared_ptr<ITableConnector::TableRow> Table::FromJson(string json)
     stringstream ss(json);
     ss << json;
     boost::property_tree::read_json(ss, tree);
+    if (foundId) *foundId = tree.get<int32_t>("id");
     result = connector->IncomeData(&tree);
   }
   catch(const boost::property_tree::json_parser_error& error)
@@ -81,4 +103,9 @@ bool Table::ToJson(uint32_t id, shared_ptr<ITableConnector::TableRow> row, strin
   catch(const boost::property_tree::json_parser_error& error)
   {}
   return result;
+}
+
+bool Table::IsIdExist(int32_t id)
+{
+  return table.find(id) != table.end();
 }
