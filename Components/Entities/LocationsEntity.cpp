@@ -21,7 +21,7 @@ void LocationsEntity::loadDatabase()
   cout << "Database loaded for locations..." << endl;
 }
 
-void LocationsEntity::OutcomeData(uint32_t id, TableRow* _data, boost::property_tree::ptree& tree)
+void LocationsEntity::OutcomeData(uint32_t id, TableRow* _data, Database::Tables::JsonTree& tree)
 {
   auto data = static_cast<LocationsTableRow*>(_data);
   tree.put("place", data->place);
@@ -30,7 +30,7 @@ void LocationsEntity::OutcomeData(uint32_t id, TableRow* _data, boost::property_
   tree.put("distance", data->distance);
 }
 
-shared_ptr<ITableConnector::TableRow> LocationsEntity::IncomeData(boost::property_tree::ptree* tree)
+shared_ptr<ITableConnector::TableRow> LocationsEntity::IncomeData(Database::Tables::JsonTree* tree)
 {
   auto data = make_shared<LocationsTableRow>();
   data->place = tree->get<string>("place");

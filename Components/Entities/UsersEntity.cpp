@@ -21,7 +21,7 @@ void UsersEntity::loadDatabase()
   cout << "Database loaded for users..." << endl;
 }
 
-void UsersEntity::OutcomeData(uint32_t id, TableRow* _data, boost::property_tree::ptree& tree)
+void UsersEntity::OutcomeData(uint32_t id, TableRow* _data, Database::Tables::JsonTree& tree)
 {
   auto data = static_cast<UsersTableRow*>(_data);
   tree.put("email", data->email);
@@ -31,7 +31,7 @@ void UsersEntity::OutcomeData(uint32_t id, TableRow* _data, boost::property_tree
   tree.put("birth_date", data->birthDate);
 }
 
-shared_ptr<ITableConnector::TableRow> UsersEntity::IncomeData(boost::property_tree::ptree* tree)
+shared_ptr<ITableConnector::TableRow> UsersEntity::IncomeData(Database::Tables::JsonTree* tree)
 {
   auto data = make_shared<UsersTableRow>();
   data->email = tree->get<string>("email");

@@ -1,7 +1,6 @@
 #pragma once
 
-#include <boost/property_tree/json_parser.hpp>
-#include <Database/ITableConnector.h>
+#include "Database/ITableConnector.h"
 
 #include <memory>
 #include <string.h>

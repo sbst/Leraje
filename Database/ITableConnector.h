@@ -1,11 +1,9 @@
 #pragma once
 
-//#include "Database/ITable.h"
-
 #include <boost/property_tree/json_parser.hpp>
-
 #include <memory>
-#include <string.h>
+#include <string>
+#include <algorithm>
 #include <map>
 
 namespace Leraje
@@ -14,6 +12,26 @@ namespace Leraje
   {
     namespace Tables
     {
+      class JsonTree : public boost::property_tree::ptree
+      {
+      public:
+        template <typename T>
+        T get(const char* field)
+        {
+          return boost::property_tree::ptree::get<T>(field);
+        }
+      };
+
+      template <>
+      inline std::string JsonTree::get<std::string>(const char* field)
+      {
+        std::string result = boost::property_tree::ptree::get<std::string>(field);
+        std::string data(result);
+        std::transform(data.begin(), data.end(), data.begin(), ::tolower);
+        if (data == "null") throw std::invalid_argument("String can not be null");
+        return result;
+      }
+
       class ITableConnector
       {
       public:
@@ -23,9 +41,9 @@ namespace Leraje
 
         struct TableRow {};
 
-        virtual void OutcomeData(uint32_t id, TableRow* data, boost::property_tree::ptree& tree) = 0;
+        virtual void OutcomeData(uint32_t id, TableRow* data, JsonTree& tree) = 0;
 
-        virtual std::shared_ptr<TableRow> IncomeData(boost::property_tree::ptree* tree) = 0;
+        virtual std::shared_ptr<TableRow> IncomeData(JsonTree* tree) = 0;
       };
     }
   }

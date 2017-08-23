@@ -21,7 +21,7 @@ void VisitsEntity::loadDatabase()
   cout << "Database loaded for visits..." << endl;
 }
 
-void VisitsEntity::OutcomeData(uint32_t id, TableRow* _data, boost::property_tree::ptree& tree)
+void VisitsEntity::OutcomeData(uint32_t id, TableRow* _data, Database::Tables::JsonTree& tree)
 {
   auto data = static_cast<VisitsTableRow*>(_data);
   tree.put("location", data->location);
@@ -30,7 +30,7 @@ void VisitsEntity::OutcomeData(uint32_t id, TableRow* _data, boost::property_tre
   tree.put("mark", data->mark);
 }
 
-shared_ptr<ITableConnector::TableRow> VisitsEntity::IncomeData(boost::property_tree::ptree* tree)
+shared_ptr<ITableConnector::TableRow> VisitsEntity::IncomeData(Database::Tables::JsonTree* tree)
 {
   auto data = make_shared<VisitsTableRow>();
   data->location = tree->get<int32_t>("location");

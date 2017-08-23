@@ -19,9 +19,9 @@ namespace Leraje
 
       virtual void loadDatabase() = 0;
 
-      virtual void OutcomeData(uint32_t id, TableRow* data, boost::property_tree::ptree& tree) = 0;
+      virtual void OutcomeData(uint32_t id, TableRow* data, Database::Tables::JsonTree& tree) = 0;
 
-      virtual std::shared_ptr<TableRow> IncomeData(boost::property_tree::ptree* tree) = 0;
+      virtual std::shared_ptr<TableRow> IncomeData(Database::Tables::JsonTree* tree) = 0;
 
       virtual ~Entity();
 

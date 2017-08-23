@@ -73,14 +73,18 @@ shared_ptr<ITableConnector::TableRow> Table::FromJson(string json, int32_t* foun
   shared_ptr<ITableConnector::TableRow> result;
   try
   {
-    boost::property_tree::ptree tree;
+    JsonTree tree;
     stringstream ss(json);
     ss << json;
-    boost::property_tree::read_json(ss, tree);
+    boost::property_tree::read_json(ss, static_cast<boost::property_tree::ptree&>(tree));
     if (foundId) *foundId = tree.get<int32_t>("id");
     result = connector->IncomeData(&tree);
   }
-  catch(const boost::property_tree::json_parser_error& error)
+  catch(const boost::exception& error)
+  {
+    result = nullptr;
+  }
+  catch(const std::invalid_argument& error)
   {
     result = nullptr;
   }
@@ -92,15 +96,15 @@ bool Table::ToJson(uint32_t id, shared_ptr<ITableConnector::TableRow> row, strin
   bool result = false;
   try
   {
-    boost::property_tree::ptree tree;
+    JsonTree tree;
     tree.put("id", id);
     connector->OutcomeData(id, row.get(), tree);
     stringstream ss;
-    boost::property_tree::write_json(ss, tree, false);
+    boost::property_tree::write_json(ss, static_cast<boost::property_tree::ptree&>(tree), false);
     json = ss.str();
     result = true;
   }
-  catch(const boost::property_tree::json_parser_error& error)
+  catch(const boost::exception& error)
   {}
   return result;
 }
