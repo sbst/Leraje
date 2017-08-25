@@ -15,9 +15,11 @@ namespace Leraje
 
       virtual void loadDatabase() override;
 
-      virtual void OutcomeData(uint32_t id, TableRow* data, Database::Tables::JsonTree& tree) override;
+      virtual void OutcomeData(TableRow* data, Database::Tables::JsonTree& tree) override;
 
       virtual std::shared_ptr<TableRow> IncomeData(Database::Tables::JsonTree* tree) override;
+
+      virtual void UpdateData(TableRow* data, Database::Tables::JsonTree* tree) override;
 
       struct LocationsTableRow : public TableRow
       {

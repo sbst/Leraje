@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Components/Entity.h"
 
+using namespace Leraje::Database::Tables;
 using namespace Leraje::Entities;
 using namespace std;
 
@@ -31,10 +32,10 @@ void Entity::handleRequest(fastcgi::Request* request, fastcgi::HandlerContext* c
 void Entity::getDataFromTable(fastcgi::Request& request)
 {
   string result = "";
-  uint32_t val = 0;
+  uint32_t id = 0;
   char tableName[20];
-  sscanf(request.getURI().c_str(), "/%[^/]/%d", tableName, &val);
-  if (db->ReadFromTable(tableName, val, result))
+  sscanf(request.getURI().c_str(), "/%[^/]/%d", tableName, &id);
+  if (db->ReadFromTable(tableName, id, result))
   {
     stringbuf buffer(result);
     request.write(&buffer);
@@ -43,23 +44,25 @@ void Entity::getDataFromTable(fastcgi::Request& request)
   else
     request.setStatus(404);
 }
+
 // TODO: email should be unique field
 void Entity::setDataToTable(fastcgi::Request& request)
 {
-  bool result = false;
+  bool result = true;
   char tableName[20];
+  uint32_t id = 0;
   if (request.getURI().find("new") != string::npos)
-  {
-    result = true;
     sscanf(request.getURI().c_str(), "/%[^/]/new", tableName);
-    vector<string> files;
-    request.argNames(files);
-    for (auto it : files)
+  else
+    sscanf(request.getURI().c_str(), "/%[^/]/%d", tableName, &id);
+
+  vector<string> files;
+  request.argNames(files);
+  for (auto it : files)
+  {
+    if (!db->WriteToTable(tableName, it, id))
     {
-      if (!db->WriteToTable(tableName, it))
-      {
-        result = false;
-      }
+      result = false;
     }
   }
 
@@ -71,5 +74,4 @@ void Entity::setDataToTable(fastcgi::Request& request)
   }
   else
     request.setStatus(400);
-
 }

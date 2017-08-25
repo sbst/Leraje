@@ -21,7 +21,7 @@ void LocationsEntity::loadDatabase()
   cout << "Database loaded for locations..." << endl;
 }
 
-void LocationsEntity::OutcomeData(uint32_t id, TableRow* _data, Database::Tables::JsonTree& tree)
+void LocationsEntity::OutcomeData(TableRow* _data, JsonTree& tree)
 {
   auto data = static_cast<LocationsTableRow*>(_data);
   tree.put("place", data->place);
@@ -30,7 +30,7 @@ void LocationsEntity::OutcomeData(uint32_t id, TableRow* _data, Database::Tables
   tree.put("distance", data->distance);
 }
 
-shared_ptr<ITableConnector::TableRow> LocationsEntity::IncomeData(Database::Tables::JsonTree* tree)
+shared_ptr<ITableConnector::TableRow> LocationsEntity::IncomeData(JsonTree* tree)
 {
   auto data = make_shared<LocationsTableRow>();
   data->place = tree->get<string>("place");
@@ -38,4 +38,13 @@ shared_ptr<ITableConnector::TableRow> LocationsEntity::IncomeData(Database::Tabl
   data->city = tree->get<string>("city");
   data->distance = tree->get<int32_t>("distance");
   return data;
+}
+
+void LocationsEntity::UpdateData(TableRow* _data, JsonTree* tree)
+{
+  LocationsTableRow& data = *(static_cast<LocationsTableRow*>(_data));
+  data.place = tree->get<string>("place");
+  data.country = tree->get<string>("country");
+  data.city = tree->get<string>("city");
+  data.distance = tree->get<int32_t>("distance");
 }

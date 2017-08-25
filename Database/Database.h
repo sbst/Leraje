@@ -25,7 +25,7 @@ namespace Leraje
 
       void LoadDatabase(std::string field, Tables::ITableConnector* connector);
 
-      bool WriteToTable(std::string tableName, std::string json);
+      bool WriteToTable(std::string tableName, std::string json, int32_t id = 0);
 
       bool ReadFromTable(std::string tableName, uint32_t id, std::string& json);
 

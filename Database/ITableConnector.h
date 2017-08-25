@@ -41,9 +41,11 @@ namespace Leraje
 
         struct TableRow {};
 
-        virtual void OutcomeData(uint32_t id, TableRow* data, JsonTree& tree) = 0;
+        virtual void OutcomeData(TableRow* data, JsonTree& tree) = 0;
 
         virtual std::shared_ptr<TableRow> IncomeData(JsonTree* tree) = 0;
+
+        virtual void UpdateData(TableRow* row, JsonTree* tree) = 0;
       };
     }
   }

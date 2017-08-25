@@ -21,7 +21,7 @@ void UsersEntity::loadDatabase()
   cout << "Database loaded for users..." << endl;
 }
 
-void UsersEntity::OutcomeData(uint32_t id, TableRow* _data, Database::Tables::JsonTree& tree)
+void UsersEntity::OutcomeData(TableRow* _data, JsonTree& tree)
 {
   auto data = static_cast<UsersTableRow*>(_data);
   tree.put("email", data->email);
@@ -31,7 +31,7 @@ void UsersEntity::OutcomeData(uint32_t id, TableRow* _data, Database::Tables::Js
   tree.put("birth_date", data->birthDate);
 }
 
-shared_ptr<ITableConnector::TableRow> UsersEntity::IncomeData(Database::Tables::JsonTree* tree)
+shared_ptr<ITableConnector::TableRow> UsersEntity::IncomeData(JsonTree* tree)
 {
   auto data = make_shared<UsersTableRow>();
   data->email = tree->get<string>("email");
@@ -40,4 +40,13 @@ shared_ptr<ITableConnector::TableRow> UsersEntity::IncomeData(Database::Tables::
   data->gender = tree->get<char>("gender");
   data->birthDate = tree->get<int64_t>("birth_date");
   return data;
+}
+
+void UsersEntity::UpdateData(TableRow* _data, JsonTree* tree)
+{
+  UsersTableRow& data = *(static_cast<UsersTableRow*>(_data));
+  data.email = tree->get<string>("email");
+  data.firstName = tree->get<string>("first_name");
+  data.lastName = tree->get<string>("last_name");
+  data.birthDate = tree->get<int64_t>("birth_date");
 }

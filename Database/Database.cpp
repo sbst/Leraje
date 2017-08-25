@@ -7,8 +7,7 @@ using namespace Leraje::Database;
 
 using namespace std;
 
-// TODO: /tmp/data/data.zip UNZIP REQUIRED
-//const char* Database::FileDataPath = "/tmp/data/";
+//const char* Database::FileDataPath = "/root/data/";
 const char* Database::FileDataPath = "/home/sbst/highloadcup/Leraje/data/TRAIN/data/";
 
 std::shared_ptr<Database> Database::GetDatabase()
@@ -18,7 +17,10 @@ std::shared_ptr<Database> Database::GetDatabase()
 }
 
 Database::Database()
-{}
+{
+  //system("cp /tmp/data/data.zip /root/Leraje/data.zip");
+  //system("unzip /root/Leraje/data.zip -d /root/data/");
+}
 
 Database::~Database()
 {
@@ -32,22 +34,20 @@ void Database::LoadDatabase(string tableName, Tables::ITableConnector* connector
   uint32_t i = 1;
   builder << Database::FileDataPath << tableName << "_" << i << ".json";
   std::ifstream file(builder.str());
-  //while(file.good())
-  //{
-      LoadFromFile(builder.str(), tableName);
-  //  file.close();
-  //  builder.str("");
-  //  ++i;
-  //  builder << Database::FileDataPath << tableName << "_" << i << ".json";
-  //  file.open(builder.str());
-  //  cout << boolalpha << file.good() << endl;
-  //  cout << builder.str() << endl;
-  //}
+  while(file.good())
+  {
+    LoadFromFile(builder.str(), tableName);
+    file.close();
+    builder.str("");
+    ++i;
+    builder << Database::FileDataPath << tableName << "_" << i << ".json";
+    file.open(builder.str());
+  }
 }
 
-bool Database::WriteToTable(string tableName, string json)
+bool Database::WriteToTable(string tableName, string json, int32_t id)
 {
-  return tables[tableName]->WriteToTable(json);
+  return id == 0 ? tables[tableName]->WriteToTable(json) : tables[tableName]->UpdateToTable(json, id);
 }
 
 bool Database::ReadFromTable(string tableName, uint32_t id, string& json)

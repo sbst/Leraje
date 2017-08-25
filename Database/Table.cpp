@@ -2,6 +2,9 @@
 #include "Table.h"
 
 #include <fstream>
+#include <algorithm>
+#include <iterator>
+#include <iostream>
 
 using namespace Leraje::Database::Tables;
 
@@ -33,6 +36,23 @@ bool Table::WriteToTable(string json)
     }
   }
   catch(const std::bad_alloc& error)
+  {}
+  return result;
+}
+
+bool Table::UpdateToTable(string json, int32_t id)
+{
+  bool result = false;
+  try
+  {
+    auto row = table.at(id);
+    MergeJsons(row, json);
+    table[id] = row;
+    result = true;
+  }
+  catch(const std::bad_alloc& error)
+  {}
+  catch(std::out_of_range& error)
   {}
   return result;
 }
@@ -98,7 +118,7 @@ bool Table::ToJson(uint32_t id, shared_ptr<ITableConnector::TableRow> row, strin
   {
     JsonTree tree;
     tree.put("id", id);
-    connector->OutcomeData(id, row.get(), tree);
+    connector->OutcomeData(row.get(), tree);
     stringstream ss;
     boost::property_tree::write_json(ss, static_cast<boost::property_tree::ptree&>(tree), false);
     json = ss.str();
@@ -107,6 +127,22 @@ bool Table::ToJson(uint32_t id, shared_ptr<ITableConnector::TableRow> row, strin
   catch(const boost::exception& error)
   {}
   return result;
+}
+
+bool Table::MergeJsons(shared_ptr<ITableConnector::TableRow> row, string json)
+{
+  try
+  {
+    JsonTree tree;
+    stringstream ss(json);
+    boost::property_tree::read_json(ss, static_cast<boost::property_tree::ptree&>(tree));
+    connector->UpdateData(row.get(), &tree);
+  }
+  catch(const boost::exception& error)
+  {}
+  catch(const std::invalid_argument& error)
+  {}
+  return true;
 }
 
 bool Table::IsIdExist(int32_t id)

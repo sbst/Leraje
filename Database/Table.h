@@ -21,6 +21,8 @@ namespace Leraje
 
         bool WriteToTable(std::string json);
 
+        bool UpdateToTable(std::string json, int32_t id);
+
         bool LoadToTable(std::string json);
 
         bool ReadFromTable(uint32_t id, std::string& json);
@@ -35,6 +37,8 @@ namespace Leraje
         std::shared_ptr<ITableConnector::TableRow> FromJson(std::string json, int32_t* foundId = nullptr);
 
         bool ToJson(uint32_t id, std::shared_ptr<ITableConnector::TableRow> row, std::string& json);
+
+        bool MergeJsons(std::shared_ptr<ITableConnector::TableRow> row, std::string json);
 
         bool IsIdExist(int32_t id);
       };
